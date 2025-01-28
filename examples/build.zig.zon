@@ -8,7 +8,7 @@
         .@"microchip/atsam" = .{ .path = "microchip/atsam" },
         .@"microchip/avr" = .{ .path = "microchip/avr" },
         .@"nordic/nrf5x" = .{ .path = "nordic/nrf5x" },
-        .@"nxp/lpc" = .{ .path = "nxp/lpc" },
+        .@"nxp/lpc/lpc17xx" = .{ .path = "nxp/lpc/lpc17xx" },
         .@"raspberrypi/rp2xxx" = .{ .path = "raspberrypi/rp2xxx" },
         .@"stmicro/stm32" = .{ .path = "stmicro/stm32" },
         .@"wch/ch32v" = .{ .path = "wch/ch32v" },

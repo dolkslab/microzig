@@ -121,6 +121,9 @@ pub const HardwareAbstractionLayer = struct {
     /// Provides the root source file for the HAL.
     root_source_file: LazyPath,
 
+    ///
+    static_clibs: []const LazyPath = &.{},
+
     /// Provides imports for the HAL. **Need to be heap allocated.**
     imports: []const Module.Import = &.{},
 };

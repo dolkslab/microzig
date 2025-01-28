@@ -23,7 +23,8 @@ const port_list: []const struct {
     .{ .name = "atsam", .dep_name = "port/microchip/atsam" },
     .{ .name = "avr", .dep_name = "port/microchip/avr" },
     .{ .name = "nrf5x", .dep_name = "port/nordic/nrf5x" },
-    .{ .name = "lpc", .dep_name = "port/nxp/lpc" },
+    .{ .name = "lpc17xx", .dep_name = "port/nxp/lpc/lpc17xx" },
+    .{ .name = "lpc546xx", .dep_name = "port/nxp/lpc/lpc546xx" },
     .{ .name = "rp2xxx", .dep_name = "port/raspberrypi/rp2xxx" },
     .{ .name = "stm32", .dep_name = "port/stmicro/stm32" },
     .{ .name = "ch32v", .dep_name = "port/wch/ch32v" },
@@ -223,10 +224,10 @@ pub fn MicroBuild(port_select: PortSelect) type {
 
         const InitReturnType = blk: {
             @setEvalBranchQuota(2000);
-
             var ok = true;
             for (port_list) |port| {
                 if (@field(port_select, port.name)) {
+                    //@compileLog(port.dep_name);
                     ok = ok and custom_lazy_import(port.dep_name) != null;
                 }
             }
@@ -501,6 +502,11 @@ pub fn MicroBuild(port_select: PortSelect) type {
                 break :blk generate_linker_script_run.addOutputFileArg("linker.ld");
             };
             fw.artifact.setLinkerScript(linker_script);
+            if (maybe_hal) |hal| {
+                for (hal.static_clibs) |clib_path| {
+                    fw.add_object_file(clib_path);
+                }
+            }
 
             return fw;
         }

@@ -1,0 +1,7 @@
+device LPC54628J512
+if SWD
+speed 4000
+connect
+loadfile zig-out/firmware/lpc54628-bare-uart.elf
+reset
+exit

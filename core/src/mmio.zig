@@ -51,5 +51,16 @@ pub fn Mmio(comptime PackedT: type) type {
             }
             write(addr, val);
         }
+
+        /// Write to the raw register (as unsigned integer), only affecting the bits where mask = 1
+        pub fn write_raw_masked(addr: *volatile Self, mask: IntT, value: IntT) void {
+            const reg = addr.raw;
+            write_raw(addr, (reg & ~mask) | (value & mask));
+        }
+
+        /// Set a single bit at an offset.
+        pub fn set_bit(addr: *volatile Self, offset: anytype, value: bool) void {
+            addr.write_raw_masked(@as(IntT, 1) << offset, @as(IntT, @intFromBool(value)) << offset);
+        }
     };
 }

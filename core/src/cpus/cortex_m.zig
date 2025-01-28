@@ -60,6 +60,13 @@ pub const startup_logic = struct {
     extern const microzig_data_load_start: u8;
 
     pub fn _start() callconv(.C) noreturn {
+        // allow the hal layer to inject some code in the startup logic
+        if (@hasDecl(microzig.hal, "extra_startup_logic")) {
+            if (@TypeOf(microzig.hal.extra_startup_logic) != fn () callconv(.Inline) void) {
+                @compileError("extra startup logic fn must be of signature inline fn() callconv(.Inline) void, not" ++ @typeName(@TypeOf(microzig.hal.extra_startup_logic)));
+            }
+            microzig.hal.extra_startup_logic();
+        }
 
         // fill .bss with zeroes
         {
