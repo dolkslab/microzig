@@ -360,6 +360,7 @@ fn load_cluster(
 
     const name = node.get_value("name") orelse return error.MissingClusterName;
     log.warn("TODO clusters. name: {s}", .{name});
+    log.warn("{}", .{node});
 
     const dim_elements = try DimElements.parse(node);
     if (dim_elements != null)

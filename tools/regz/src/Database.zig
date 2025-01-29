@@ -25,6 +25,7 @@ pub const DevicePeripheralID = ID(u32, "device_peripherals");
 // Lots of operations use types so we omit "Type" in the type name for the ID
 pub const PeripheralID = ID(u32, "peripherals");
 pub const EnumID = ID(u32, "enums");
+pub const ClusterID = ID(u32, "cluster");
 pub const RegisterID = ID(u32, "registers");
 pub const ModeID = ID(u32, "modes");
 pub const StructID = ID(u32, "structs");
@@ -123,6 +124,19 @@ pub const Enum = struct {
     }
 };
 
+pub const Cluster = struct {
+    id: RegisterID,
+    cluster_id: ClusterID,
+    name: []const u8,
+    description: ?[] const u8,
+    count: u64,
+    increment: u64,
+
+
+
+
+};
+
 pub const Register = struct {
     id: RegisterID,
     struct_id: ?StructID,
@@ -169,6 +183,7 @@ pub const Register = struct {
         });
     }
 };
+
 
 pub const EnumField = struct {
     enum_id: EnumID,
@@ -458,7 +473,6 @@ const schema: []const []const u8 = &.{
     "CREATE INDEX idx_enums_struct_id_name ON enums (struct_id, name)",
     "CREATE INDEX idx_enum_fields_enum_id_value ON enum_fields(enum_id, value)",
 };
-
 pub const Format = enum {
     svd,
     atdf,
