@@ -105,9 +105,9 @@ pub const Uart = struct {
             .RXPOL = .STANDARD,
             .TXPOL = .STANDARD,
             .OETA = .DISABLED,
-            .reserved2 = 0,
-            .reserved11 = 0,
-            .reserved14 = 0,
+            //.reserved2 = 0,
+            //.reserved11 = 0,
+            //.reserved14 = 0,
             .padding = 0,
         });
 
@@ -153,8 +153,8 @@ pub const Uart = struct {
             .RXLVLENA = @enumFromInt(@intFromBool(cfg.rx_enabled)),
             .TXLVL = cfg.tx_level,
             .RXLVL = @as(u4, @truncate(cfg.rx_level - 1)),
-            .reserved8 = 0,
-            .reserved16 = 0,
+            //.reserved8 = 0,
+            //.reserved16 = 0,
             .padding = 0,
         });
     }

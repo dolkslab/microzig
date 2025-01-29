@@ -1,4 +1,5 @@
 const std = @import("std");
+const micro = @import("microzig.zig");
 
 /// A helper class that allows operating on a slice of slices
 /// with similar operations to those of a slice.
@@ -186,6 +187,34 @@ pub fn Slice_Vector(comptime Slice: type) type {
             };
         };
     };
+}
+
+pub fn GenerateInterruptEnum() type {
+    var fields: [micro.chip.INTERRUPTS.len]std.builtin.Type.EnumField = undefined;
+
+    for (&fields, micro.chip.INTERRUPTS) |*field, interrupt| {
+        field.* = .{
+            .name = interrupt.name,
+            .value = interrupt.index,
+        };
+    }
+
+    return @Type(.{ .Enum = .{
+        .tag_type = i16,
+        .fields = &fields,
+        .decls = &.{},
+        .is_exhaustive = true,
+    } });
+}
+
+pub fn max_enum_tag(T: type) @typeInfo(T).Enum.tag_type {
+    var max_tag: @typeInfo(T).Enum.tag_type = 0;
+    for (@typeInfo(T).Enum.fields) |field| {
+        if (field.value > max_tag) {
+            max_tag = field.value;
+        }
+    }
+    return max_tag;
 }
 
 test Slice_Vector {

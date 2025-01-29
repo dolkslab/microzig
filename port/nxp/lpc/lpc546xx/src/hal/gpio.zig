@@ -21,9 +21,7 @@ pub const Gpio = struct {
 
     pub fn set_dir(self: *const Gpio, dir: bool) void {
         gpio_periph.DIR[self.pad.port]
-
-
-        .set_bit(self.pad.num, dir);
+            .set_bit(self.pad.num, dir);
     }
 
     pub fn write(self: *const Gpio, high: bool) void {
@@ -46,9 +44,7 @@ pub const Gpio = struct {
     }
 
     // idk why but regz doesn't like the 2D array for the GPIO Byte registers,
-    // so it pretends they don't exist. So here is a another jank pointer hack
-    // to get around it. I mean this is basically what arrays are anyway execpt
-    // memora non safetyora.
+    // so it pretends they don't exist.
     inline fn get_gpio_B_reg(self: *const Gpio) *volatile u8 {
         const gpio_base: usize = @intFromPtr(gpio_periph);
         const offset: usize = ((@as(u32, self.pio.num) + (32 * (@as(usize, self.pio.port)))));

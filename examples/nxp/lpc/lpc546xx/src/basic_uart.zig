@@ -13,15 +13,16 @@ var UART0 = hal.uart.create(
 pub fn main() !void {
     led_gpio.init(true);
 
-    var a: u32 = 0;
+    // var a: u32 = 0;
+    var balls = [2]u32{ 0, 0 };
 
     UART0.init(
         115200,
         .{},
     );
 
-    while (true) : (a +%= 1) {
-        if (a % 10000000 == 0) {
+    while (true) : (balls[0] +%= 1) {
+        if (balls[0] % 10000000 == 0) {
             led_gpio.toggle();
             UART0.writer().print("hello world !\n", .{}) catch unreachable;
             //UART0.push(u8, 'a');
