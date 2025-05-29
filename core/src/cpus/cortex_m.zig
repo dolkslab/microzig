@@ -242,6 +242,7 @@ pub const interrupt = struct {
                         .BusFault => return (raw & 0x0000_4000) != 0,
                         .MemManageFault => return (raw & 0x0000_2000) != 0,
                         .UsageFault => return (raw & 0x0000_1000) != 0,
+                        .PendSV => return (ppb.ICSR & 0x1000_0000) != 0,
                         else => @compileError("not supported on this platform"),
                     }
                 },
@@ -265,9 +266,7 @@ pub const interrupt = struct {
                         else => @compileError("not supported on this platform"),
                     }
                 },
-                .cortex_m33,
-                .cortex_m55,
-                => {
+                .cortex_m33, .cortex_m55 => {
                     switch (excpt) {
                         .HardFault => ppb.SHCSR.raw |= 0x0020_0000,
                         .SecureFault => ppb.SHCSR.raw |= 0x0010_0000,
@@ -275,6 +274,7 @@ pub const interrupt = struct {
                         .BusFault => ppb.SHCSR.raw |= 0x0000_4000,
                         .MemManageFault => ppb.SHCSR.raw |= 0x0000_2000,
                         .UsageFault => ppb.SHCSR.raw |= 0x0000_1000,
+                        .PendSV => ppb.ICSR.raw |= 0x1000_0000,
                         else => @compileError("not supported on this platform"),
                     }
                 },
@@ -308,6 +308,7 @@ pub const interrupt = struct {
                         .BusFault => ppb.SHCSR.raw &= ~@as(u32, 0x0000_4000),
                         .MemManageFault => ppb.SHCSR.raw &= ~@as(u32, 0x0000_2000),
                         .UsageFault => ppb.SHCSR.raw &= ~@as(u32, 0x0000_1000),
+                        .PendSV => ppb.ICSR.raw |= 0x0800_0000,
                         else => @compileError("not supported on this platform"),
                     }
                 },
