@@ -729,6 +729,52 @@ pub const utils = switch (cortex_m) {
     else => void{},
 };
 
+pub const fpu = struct {
+    const present = @hasDecl(properties, "cpu.fpuPresent") and std.mem.eql(u8, properties.@"cpu.fpuPresent", "true");
+    const ppb = microzig.chip.peripherals.PPB;
+
+    const Acces = enum(u32) {
+        CP10_no_acces = 0x0000_0000,
+        CP10_priveleged = 0x0200_000,
+        CP10_full = 0x0300_000,
+
+        //CP11_no_acces = 0x0000_0000,
+        CP11_priveleged = 0x0800_000,
+        CP11_full = 0x0C00_000,
+    };
+
+    pub fn enable_full() void {
+        if (present) {
+            ppb.CPACR.raw |= @intFromEnum(Acces.CP10_full) | @intFromEnum(Acces.CP11_full);
+        } else {
+            @compileError("This chip does not have a FPU.");
+        }
+    }
+    pub fn enable_priveleged() void {
+        if (present) {
+            ppb.CPACR.raw &= ~@intFromEnum(Acces.CP10_full) | @intFromEnum(Acces.CP11_full);
+            ppb.CPACR.raw |= @intFromEnum(Acces.CP10_priveleged) | @intFromEnum(Acces.CP11_priveleged);
+        } else {
+            @compileError("This chip does not have a FPU.");
+        }
+    }
+    pub fn disable() void {
+        if (present) {
+            ppb.CPACR.raw &= ~@intFromEnum(Acces.CP10_full) | @intFromEnum(Acces.CP11_full);
+        } else {
+            @compileError("This chip does not have a FPU.");
+        }
+    }
+
+    pub fn is_enabled() bool {
+        if (present) {
+            return (ppb.CPACR.raw & @intFromEnum(Acces.CP10_full)) > 0;
+        } else {
+            return false;
+        }
+    }
+};
+
 pub const peripherals = struct {
     /// System Control Block (SCB).
     pub const scb: *volatile types.peripherals.SystemControlBlock = @ptrFromInt(scb_base);
